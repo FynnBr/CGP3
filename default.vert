@@ -16,8 +16,7 @@ void main() {
     // define vertex position in space.
     // must be 4-dimensional, so supplement Z and W values.
     gl_Position = vec4(aPosition, 0.0f, 1.0f);
-    // vec4 pos = vec4(aPosition, 0.0, 1.0);
-    vec4 pos = vec4(aPosition, 1.0f);
+    vec4 pos = vec4(aPosition, 0.0, 1.0);
     gl_Position = uRotMat *pos;
 }
 
