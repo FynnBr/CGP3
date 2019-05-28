@@ -4,5 +4,6 @@
         <file>default.vert</file>
         <file>sample_texture.jpg</file>
         <file>color.frag</file>
+        <file>gimbal_wood.jpg</file>
     </qresource>
 </RCC>

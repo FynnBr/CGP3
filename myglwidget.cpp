@@ -163,7 +163,7 @@ void MyGLWidget::initializeGL() {
 
     #undef OFS
 
-    img.load(":/sample_texture.jpg");
+    img.load(":/gimbal_wood.jpg");
     Q_ASSERT(!img.isNull());
 
     glGenTextures(1, &m_tex);
@@ -199,8 +199,11 @@ void MyGLWidget::paintGL() {
 
     mp_program->bind();
     mp_program->setUniformValue(1, TextureMod);
-    mp_program->setUniformValue(3,uRotMat);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    mp_program->setUniformValue(3, uRotMat);
+    glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
+
+    this->update();
+
     mp_program->release();
 
     glBindVertexArray(0);
