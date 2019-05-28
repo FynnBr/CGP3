@@ -30,7 +30,8 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-    myglwidget.h
+    myglwidget.h \
+    modelloader.h
 
 FORMS += \
         mainwindow.ui
@@ -39,3 +40,13 @@ RESOURCES += \
     shader.qrc
 
 DISTFILES +=
+
+win32 {
+message(Target: win32)
+LIBS += -L../assimp-mingw32-4.1.0/bin -lassimp
+INCLUDEPATH += ../assimp-mingw32-4.1.0/include
+} unix {
+message(Target: unix)
+CONFIG += link_pkgconfig
+PKGCONFIG += assimp
+}
