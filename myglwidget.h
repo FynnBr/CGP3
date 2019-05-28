@@ -8,7 +8,6 @@
 #include <QDebug>
 #include <QOpenGLFunctions_4_4_Core>
 #include <QOpenGLShaderProgram>
-#include "model.h"
 #include "modelloader.h"
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
@@ -29,7 +28,7 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         QImage img;
         GLuint m_ibo;
         QMatrix4x4 uRotMat;
-        Model loader;
+        ModelLoader loader;
 
 
         QOpenGLShaderProgram* mp_program;

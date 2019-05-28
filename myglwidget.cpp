@@ -117,7 +117,7 @@ void MyGLWidget::moveTexture(int value){
 void MyGLWidget::initializeGL() {
     Q_ASSERT(initializeOpenGLFunctions());
 
-    glClearColor(1.0, 0.0, 1.0, 1.0);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
 
     struct Vertex {
         QVector3D position;
@@ -125,36 +125,32 @@ void MyGLWidget::initializeGL() {
         QVector2D texture;
     };
 
-    loader.initGL(":/objects/gimbal.obj");
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-   /*loader.loadObjectFromFile(":/objects/gimbal.obj");
+    loader.loadObjectFromFile(":/objects/gimbal.obj");
     Q_ASSERT(loader.hasScene());
 
     GLfloat vbodata[loader.lengthOfVBO()];
     loader.genVBO(vbodata);
 
     GLuint ibodata[loader.lengthOfIndexArray()];
-    loader.genIndexArray(ibodata);*/
+    loader.genIndexArray(ibodata);
 
     //glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //glEnable(GL_CULL_FACE);
 
-//    glGenVertexArrays(1, &m_vao); //m_vao um elemente in m_vbo richtig zu unterteilen
-//    glBindVertexArray(m_vao);
+    glGenVertexArrays(1, &m_vao); //m_vao um elemente in m_vbo richtig zu unterteilen
+    glBindVertexArray(m_vao);
 
-    /*glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vbodata), vbodata, GL_STATIC_DRAW);
 
     glGenBuffers(1, &m_ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ibodata), ibodata, GL_STATIC_DRAW);*/
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ibodata), ibodata, GL_STATIC_DRAW);
 
-    /*#define OFS(s,a) reinterpret_cast<void* const>(offsetof(s,a))
+    #define OFS(s,a) reinterpret_cast<void* const>(offsetof(s,a))
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
@@ -165,9 +161,9 @@ void MyGLWidget::initializeGL() {
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, texture));
 
-    #undef OFS*/
+    #undef OFS
 
-    img.load(":/gimbal_wood.jpg");
+    img.load(":/sample_texture.jpg");
     Q_ASSERT(!img.isNull());
 
     glGenTextures(1, &m_tex);
@@ -180,6 +176,9 @@ void MyGLWidget::initializeGL() {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
     mp_program = new QOpenGLShaderProgram();
     mp_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/default.vert");
@@ -201,9 +200,7 @@ void MyGLWidget::paintGL() {
     mp_program->bind();
     mp_program->setUniformValue(1, TextureMod);
     mp_program->setUniformValue(3,uRotMat);
-    loader.drawElements();
-    this->update();
-    //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
     mp_program->release();
 
     glBindVertexArray(0);
