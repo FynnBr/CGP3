@@ -132,8 +132,6 @@ void MyGLWidget::initializeGL() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glEnable(GL_CULL_FACE);
-
     glGenVertexArrays(1, &m_vao); //m_vao um elemente in m_vbo richtig zu unterteilen
     glBindVertexArray(m_vao);
 
@@ -209,14 +207,6 @@ void MyGLWidget::paintGL() {
     // mp_program->setUniformValue(0, uAlpha);
 
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-
-    // rotation axis (= Y-axis)
-    QVector3D rotAxis(0, 1, 0);
-    QMatrix4x4 rotMat;
-    // rotate by 45 degree
-    rotMat.rotate(45, rotAxis);
-    mp_program->setUniform(0, rotMat);
-
     mp_programC->release();
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
