@@ -10,6 +10,7 @@
 #include <QOpenGLShaderProgram>
 #include "modelloader.h"
 #include <QElapsedTimer>
+#include "mySkybox.h"
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
     Q_OBJECT
@@ -31,10 +32,14 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         QMatrix4x4 uRotMatOuter;
         QMatrix4x4 uRotMatMiddle;
         QMatrix4x4 uRotMatInner;
+        QMatrix4x4 cameraMat;
         ModelLoader loader;
         QElapsedTimer timer;
         bool animationActive;
+        bool m_GimbalCam;
+        QVector3D axisA, axisB, axisC;
         QMatrix4x4 projecMat;
+        MySkybox skybox;
 
 
         QOpenGLShaderProgram* mp_program;
@@ -60,6 +65,7 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         void setRotationC(int value);
         void moveTexture(int value);
         void setAnimation(bool value);
+        void setGimbalCamera(bool value);
         void updateProjMat();
 
     signals:

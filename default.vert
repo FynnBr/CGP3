@@ -9,6 +9,7 @@ layout(location = 0) out vec2 outCoordinates;
 layout(location = 1) out vec3 vColor;
 layout(location = 3) uniform mat4x4 uRotMat;
 layout(location = 4) uniform mat4x4 projectMat;
+layout(location = 5) uniform mat4x4 viewMat;
 
 void main() {
     // pass color to fragment shader
@@ -19,6 +20,6 @@ void main() {
     // gl_Position = vec4(aPosition, 0.0f, 1.0f);
 
     vec4 pos = vec4(aPosition, 1.0f);
-    gl_Position = projectMat * uRotMat * pos;
+    gl_Position = projectMat * viewMat * uRotMat * pos;
 }
 

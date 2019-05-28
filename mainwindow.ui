@@ -198,6 +198,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="gimbalCB">
+              <property name="text">
+               <string>Gimbal Camera</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>

@@ -6,6 +6,9 @@
 }*/
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
+    axisA = {0, 1, 0};
+    axisB = {1, 0, 0};
+    axisC = {0, 1, 0};
 }
 
 void MyGLWidget::setFOV(int value) {
@@ -30,9 +33,11 @@ void MyGLWidget::setProjectionMode() {
 }
 
 void MyGLWidget::setRotationA(int value) {
-    uRotMatOuter.rotate(value-m_RotationA, {0,1,0});
-    uRotMatMiddle.rotate(value-m_RotationA, {0,1,0});
-    uRotMatInner.rotate(value-m_RotationA, {0,1,0});
+    uRotMatOuter.rotate(value-m_RotationA, axisA);
+    uRotMatMiddle.rotate(value-m_RotationA, axisA);
+    uRotMatInner.rotate(value-m_RotationA, axisA);
+    axisB = uRotMatOuter.transposed() * QVector3D(1, 0, 0);
+    axisC = uRotMatOuter.transposed() * QVector3D(0, 1, 0);
     m_RotationA = value;
     mp_program->bind();
     mp_program->setUniformValue(3,uRotMatOuter);
@@ -40,8 +45,10 @@ void MyGLWidget::setRotationA(int value) {
 }
 
 void MyGLWidget::setRotationB(int value) {
-    uRotMatMiddle.rotate(value-m_RotationB, {0,1,0});
-    uRotMatInner.rotate(value-m_RotationB, {0,1,0});
+    uRotMatMiddle.rotate(value-m_RotationB, axisB);
+    uRotMatInner.rotate(value-m_RotationB, axisB);
+
+    axisC = uRotMatMiddle.transposed() * QVector3D(0, 1, 0);
     m_RotationB = value;
     mp_program->bind();
     mp_program->setUniformValue(3,uRotMatMiddle);
@@ -49,7 +56,7 @@ void MyGLWidget::setRotationB(int value) {
 }
 
 void MyGLWidget::setRotationC(int value) {
-    uRotMatInner.rotate(value-m_RotationC, {0,1,0});
+    uRotMatInner.rotate(value-m_RotationC, axisC);
     m_RotationC = value;
     mp_program->bind();
     mp_program->setUniformValue(3,uRotMatInner);
@@ -119,6 +126,16 @@ void MyGLWidget::setAnimation(bool value){
     qInfo()<<"spin to win" << animationActive;
 }
 
+void MyGLWidget::setGimbalCamera(bool value) {
+    m_GimbalCam = value;
+
+    if(m_GimbalCam) {
+
+    } else {
+        cameraMat = QMatrix4x4();
+    }
+}
+
 void MyGLWidget::updateProjMat(){
     projecMat = QMatrix4x4();
     qInfo() << "Near: " << m_Near << " Far: " << m_Far << " Angle: " << m_Angle << "\n";
@@ -133,6 +150,7 @@ void MyGLWidget::updateProjMat(){
 void MyGLWidget::initializeGL() {
     Q_ASSERT(initializeOpenGLFunctions());
 
+    skybox.initializeGL();
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
     struct Vertex {
@@ -216,27 +234,32 @@ void MyGLWidget::resizeGL(int w, int h) {
 
 void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
-
+    skybox.render(projecMat, cameraMat);
     glBindVertexArray(m_vao);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);
 
     mp_program->bind();
     mp_program->setUniformValue(1, TextureMod);
-    mp_program->setUniformValue(4, projecMat);
-    mp_program->setUniformValue(3, uRotMatOuter);
+    mp_program->setUniformValue(4, projecMat.transposed());
+    mp_program->setUniformValue(5, cameraMat);
+    mp_program->setUniformValue(3, uRotMatOuter.transposed());
     glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
 
-    mp_program->setUniformValue(3, uRotMatMiddle);
+    mp_program->setUniformValue(3, uRotMatMiddle.transposed());
     glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
 
-    mp_program->setUniformValue(3, uRotMatInner);
+    mp_program->setUniformValue(3, uRotMatInner.transposed());
     glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
 
     if(animationActive){
         setRotationA(m_RotationA + 1);
         setRotationB(m_RotationB + 2);
         setRotationC(m_RotationC + 3);
+    }
+
+    if(m_GimbalCam){
+        cameraMat = uRotMatInner;
     }
     mp_program->release();
     glBindVertexArray(0);

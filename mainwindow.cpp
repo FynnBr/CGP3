@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, &MyGLWidget::farValueChanged, ui->dsbFar, &QDoubleSpinBox::setValue);
     connect(ui->openGLWidget, &MyGLWidget::nearValueChanged, ui->dsbNear, &QDoubleSpinBox::setValue);
 
+    connect(ui->gimbalCB, &QCheckBox::toggled, ui->openGLWidget, &MyGLWidget::setGimbalCamera);
     connect(ui->animationCB, &QCheckBox::toggled, ui->openGLWidget, &MyGLWidget::setAnimation);
 
     // Lambda Methoden

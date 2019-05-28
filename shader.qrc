@@ -5,5 +5,13 @@
         <file>sample_texture.jpg</file>
         <file>color.frag</file>
         <file>gimbal_wood.jpg</file>
+        <file>skybox.frag</file>
+        <file>skybox.vert</file>
+        <file>skybox_images/back.jpg</file>
+        <file>skybox_images/bottom.jpg</file>
+        <file>skybox_images/front.jpg</file>
+        <file>skybox_images/left.jpg</file>
+        <file>skybox_images/right.jpg</file>
+        <file>skybox_images/top.jpg</file>
     </qresource>
 </RCC>
