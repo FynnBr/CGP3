@@ -132,24 +132,10 @@
            <layout class="QVBoxLayout" name="gbRotation">
             <item>
              <layout class="QFormLayout" name="Roations">
-              <item row="2" column="0">
-               <widget class="QLabel" name="labelC">
-                <property name="text">
-                 <string>Ring C</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="0">
                <widget class="QLabel" name="labelA">
                 <property name="text">
                  <string>Ring A</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="labelB">
-                <property name="text">
-                 <string>Ring B</string>
                 </property>
                </widget>
               </item>
@@ -166,6 +152,13 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelB">
+                <property name="text">
+                 <string>Ring B</string>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="1">
                <widget class="QSlider" name="hsRotationB">
                 <property name="maximum">
@@ -176,6 +169,13 @@
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="labelC">
+                <property name="text">
+                 <string>Ring C</string>
                 </property>
                </widget>
               </item>
@@ -190,6 +190,13 @@
                </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="animationCB">
+              <property name="text">
+               <string>Animation</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

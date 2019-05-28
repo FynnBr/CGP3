@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, &MyGLWidget::farValueChanged, ui->dsbFar, &QDoubleSpinBox::setValue);
     connect(ui->openGLWidget, &MyGLWidget::nearValueChanged, ui->dsbNear, &QDoubleSpinBox::setValue);
 
+    connect(ui->animationCB, &QCheckBox::toggled, ui->openGLWidget, &MyGLWidget::setAnimation);
+
     // Lambda Methoden
     connect(ui->vsFOV, &QSlider::valueChanged, [=] (){qInfo() << ui->openGLWidget->getFOV();});
     connect(ui->vsAngle, &QSlider::valueChanged, [=] (){qInfo() << ui->openGLWidget->getAngle();});

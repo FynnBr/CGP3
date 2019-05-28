@@ -29,22 +29,22 @@ void MyGLWidget::setProjectionMode() {
 }
 
 void MyGLWidget::setRotationA(int value) {
-    uRotMatOuter.rotate(value-m_RotationC, {0,1,0});
-    uRotMatMiddle.rotate(value-m_RotationC, {0,1,0});
-    uRotMatInner.rotate(value-m_RotationC, {0,1,0});
-    m_RotationC = value;
+    uRotMatOuter.rotate(value-m_RotationA, {0,1,0});
+    uRotMatMiddle.rotate(value-m_RotationA, {0,1,0});
+    uRotMatInner.rotate(value-m_RotationA, {0,1,0});
+    m_RotationA = value;
     mp_program->bind();
     mp_program->setUniformValue(3,uRotMatOuter);
-    this->update();
+    //this->update();
 }
 
 void MyGLWidget::setRotationB(int value) {
-    uRotMatMiddle.rotate(value-m_RotationC, {0,1,0});
-    uRotMatInner.rotate(value-m_RotationC, {0,1,0});
-    m_RotationC = value;
+    uRotMatMiddle.rotate(value-m_RotationB, {0,1,0});
+    uRotMatInner.rotate(value-m_RotationB, {0,1,0});
+    m_RotationB = value;
     mp_program->bind();
     mp_program->setUniformValue(3,uRotMatMiddle);
-    this->update();
+    //this->update();
 }
 
 void MyGLWidget::setRotationC(int value) {
@@ -52,7 +52,7 @@ void MyGLWidget::setRotationC(int value) {
     m_RotationC = value;
     mp_program->bind();
     mp_program->setUniformValue(3,uRotMatInner);
-    this->update();
+    //this->update();
 }
 
 void MyGLWidget::setNear(double value){
@@ -108,7 +108,12 @@ void MyGLWidget::keyPressEvent(QKeyEvent *event) {
 void MyGLWidget::moveTexture(int value){
     TextureMod = (float)value/100;
     mp_program->setUniformValue(2, TextureMod);
-    this->update();
+    //this->update();
+}
+
+void MyGLWidget::setAnimation(bool value){
+    animationActive = value;
+    qInfo()<<"spin to win" << animationActive;
 }
 
 
@@ -211,11 +216,15 @@ void MyGLWidget::paintGL() {
 
     mp_program->setUniformValue(3, uRotMatInner);
     glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
-    this->update();
 
+    if(animationActive){
+        setRotationA(m_RotationA + 1);
+        setRotationB(m_RotationB + 2);
+        setRotationC(m_RotationC + 3);
+    }
     mp_program->release();
-
     glBindVertexArray(0);
+    this->update();
 }
 
 void MyGLWidget::finalize() {

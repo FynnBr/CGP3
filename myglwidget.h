@@ -9,6 +9,7 @@
 #include <QOpenGLFunctions_4_4_Core>
 #include <QOpenGLShaderProgram>
 #include "modelloader.h"
+#include <QElapsedTimer>
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
     Q_OBJECT
@@ -31,6 +32,8 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         QMatrix4x4 uRotMatMiddle;
         QMatrix4x4 uRotMatInner;
         ModelLoader loader;
+        QElapsedTimer timer;
+        bool animationActive;
 
 
         QOpenGLShaderProgram* mp_program;
@@ -55,6 +58,7 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         void setRotationB(int value);
         void setRotationC(int value);
         void moveTexture(int value);
+        void setAnimation(bool value);
 
     signals:
         void farValueChanged(int value);
