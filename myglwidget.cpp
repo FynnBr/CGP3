@@ -29,29 +29,29 @@ void MyGLWidget::setProjectionMode() {
 }
 
 void MyGLWidget::setRotationA(int value) {
-    //m_RotationA = value;
-    /*uAlpha = 1.0f-(float)value/100;
-    mp_program->setUniformValue(0,uAlpha);
-    this->update();*/
+    uRotMatOuter.rotate(value-m_RotationC, {0,1,0});
+    uRotMatMiddle.rotate(value-m_RotationC, {0,1,0});
+    uRotMatInner.rotate(value-m_RotationC, {0,1,0});
+    m_RotationC = value;
     mp_program->bind();
-    TextureMod = (float)(value/100.0);
-    mp_program->setUniformValue(2, TextureMod);
+    mp_program->setUniformValue(3,uRotMatOuter);
     this->update();
 }
 
 void MyGLWidget::setRotationB(int value) {
-    m_RotationB = value;
-    //mp_programC->bind();
-    //uAlpha = (float)value/100;
-    //mp_programC->setUniformValue(0,uAlpha);
+    uRotMatMiddle.rotate(value-m_RotationC, {0,1,0});
+    uRotMatInner.rotate(value-m_RotationC, {0,1,0});
+    m_RotationC = value;
+    mp_program->bind();
+    mp_program->setUniformValue(3,uRotMatMiddle);
     this->update();
 }
 
 void MyGLWidget::setRotationC(int value) {
-    uRotMat.rotate(value-m_RotationC, {0,1,0});
+    uRotMatInner.rotate(value-m_RotationC, {0,1,0});
     m_RotationC = value;
     mp_program->bind();
-    mp_program->setUniformValue(3,uRotMat);
+    mp_program->setUniformValue(3,uRotMatInner);
     this->update();
 }
 
@@ -124,6 +124,10 @@ void MyGLWidget::initializeGL() {
         QVector3D normal;
         QVector2D texture;
     };
+
+    uRotMatOuter.scale(0.9);
+    uRotMatMiddle.scale(0.77);
+    uRotMatInner.scale(0.66);
 
     loader.loadObjectFromFile(":/objects/gimbal.obj");
     Q_ASSERT(loader.hasScene());
@@ -199,9 +203,14 @@ void MyGLWidget::paintGL() {
 
     mp_program->bind();
     mp_program->setUniformValue(1, TextureMod);
-    mp_program->setUniformValue(3, uRotMat);
+    mp_program->setUniformValue(3, uRotMatOuter);
     glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
 
+    mp_program->setUniformValue(3, uRotMatMiddle);
+    glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
+
+    mp_program->setUniformValue(3, uRotMatInner);
+    glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
     this->update();
 
     mp_program->release();

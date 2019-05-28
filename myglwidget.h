@@ -27,7 +27,9 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         GLuint m_tex;
         QImage img;
         GLuint m_ibo;
-        QMatrix4x4 uRotMat;
+        QMatrix4x4 uRotMatOuter;
+        QMatrix4x4 uRotMatMiddle;
+        QMatrix4x4 uRotMatInner;
         ModelLoader loader;
 
 
