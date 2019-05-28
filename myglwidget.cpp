@@ -37,7 +37,6 @@ void MyGLWidget::setRotationA(int value) {
     TextureMod = (float)(value/100.0);
     mp_program->setUniformValue(2, TextureMod);
     this->update();
-    qInfo() << TextureMod;
 }
 
 void MyGLWidget::setRotationB(int value) {
@@ -49,7 +48,11 @@ void MyGLWidget::setRotationB(int value) {
 }
 
 void MyGLWidget::setRotationC(int value) {
+    uRotMat.rotate(value-m_RotationC, {0,1,0});
     m_RotationC = value;
+    mp_program->bind();
+    mp_program->setUniformValue(3,uRotMat);
+    this->update();
 }
 
 void MyGLWidget::setNear(double value){
@@ -206,14 +209,15 @@ void MyGLWidget::paintGL() {
 
     // mp_program->setUniformValue(0, uAlpha);
 
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, offset);
     mp_programC->release();
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     mp_program->bind();
-     mp_program->setUniformValue(1, TextureMod);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, offset);
+    mp_program->setUniformValue(1, TextureMod);
+    mp_program->setUniformValue(3,uRotMat);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
     mp_program->release();
 
     glBindVertexArray(0);
