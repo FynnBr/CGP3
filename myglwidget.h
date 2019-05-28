@@ -34,6 +34,7 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         ModelLoader loader;
         QElapsedTimer timer;
         bool animationActive;
+        QMatrix4x4 projecMat;
 
 
         QOpenGLShaderProgram* mp_program;
@@ -59,6 +60,7 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         void setRotationC(int value);
         void moveTexture(int value);
         void setAnimation(bool value);
+        void updateProjMat();
 
     signals:
         void farValueChanged(int value);

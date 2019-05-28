@@ -18,6 +18,7 @@ int MyGLWidget::getFOV() {
 
 void MyGLWidget::setAngle(int value) {
     m_Angle = value;
+    updateProjMat();
 }
 
 int MyGLWidget::getAngle() {
@@ -70,6 +71,7 @@ void MyGLWidget::setNear(double value){
         m_Far = m_Near+2;
         emit farValueChanged(m_Far);
     }
+    updateProjMat();
 }
 
 void MyGLWidget::setFar(double value){
@@ -87,6 +89,7 @@ void MyGLWidget::setFar(double value){
         m_Near = m_Far+2;
         emit nearValueChanged(m_Near);
     }
+    updateProjMat();
 }
 
 void MyGLWidget::keyPressEvent(QKeyEvent *event) {
@@ -116,6 +119,14 @@ void MyGLWidget::setAnimation(bool value){
     qInfo()<<"spin to win" << animationActive;
 }
 
+void MyGLWidget::updateProjMat(){
+    projecMat = QMatrix4x4();
+    qInfo() << "Near: " << m_Near << " Far: " << m_Far << " Angle: " << m_Angle << "\n";
+    qInfo() << "Width " << this->width() << " Height: " << this->height() << "\n";
+    projecMat.perspective(m_Angle, (double)this->width() / (double)this->height(),(float) m_Near, (float) m_Far);
+    qInfo() << projecMat;
+}
+
 
 //destructor -->
 
@@ -129,6 +140,10 @@ void MyGLWidget::initializeGL() {
         QVector3D normal;
         QVector2D texture;
     };
+    m_Angle = 0;
+    m_Near = 2.0;
+    m_Far = 0.0;
+    projecMat.perspective(m_Angle, this->width() / this->height(), m_Near, m_Far);
 
     uRotMatOuter.scale(0.9);
     uRotMatMiddle.scale(0.77);
@@ -208,6 +223,7 @@ void MyGLWidget::paintGL() {
 
     mp_program->bind();
     mp_program->setUniformValue(1, TextureMod);
+    mp_program->setUniformValue(4, projecMat);
     mp_program->setUniformValue(3, uRotMatOuter);
     glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
 
