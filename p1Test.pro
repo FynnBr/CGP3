@@ -26,20 +26,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    myglwidget.cpp
+    myglwidget.cpp \
 
 HEADERS += \
         mainwindow.h \
     myglwidget.h \
-    modelloader.h
+    modelloader.h \
 
 FORMS += \
         mainwindow.ui
 
 RESOURCES += \
-    shader.qrc
+    shader.qrc \
+    objects.qrc
 
-DISTFILES +=
+DISTFILES += \
+    objects/gimbal.obj \
+    objects/sphere.obj
 
 win32 {
 message(Target: win32)
@@ -50,3 +53,4 @@ message(Target: unix)
 CONFIG += link_pkgconfig
 PKGCONFIG += assimp
 }
+

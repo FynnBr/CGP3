@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>objects/gimbal.obj</file>
+        <file>objects/sphere.obj</file>
+    </qresource>
+</RCC>
