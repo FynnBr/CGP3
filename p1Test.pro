@@ -26,10 +26,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
+    myglwidget.cpp \
+    ../Modelloader/model.cpp \
+    model.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    model.cpp \
     myglwidget.cpp
 
 HEADERS += \
         mainwindow.h \
+    myglwidget.h \
+    ../Modelloader/model.h \
+    ../Modelloader/model.h \
+    modelloader.h \
+    model.h \
+    mainwindow.h \
+    model.h \
+    modelloader.h \
     myglwidget.h
 
 FORMS += \
@@ -38,7 +52,9 @@ FORMS += \
 RESOURCES += \
     shader.qrc
 
-DISTFILES +=
+DISTFILES += \
+    objects/gimbal.obj \
+    objects/sphere.obj
 
 win32 {
 message(Target: win32)

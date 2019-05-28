@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QOpenGLFunctions_4_4_Core>
 #include <QOpenGLShaderProgram>
+#include "modelloader.h"
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
     Q_OBJECT
@@ -31,6 +32,10 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         QOpenGLShaderProgram* mp_programC;
         GLuint m_vbo;
         GLuint m_vao;
+
+        ModelLoader loader;
+        GLfloat* objectData;
+        GLuint* iboObjectData;
 
 
     public:

@@ -117,9 +117,12 @@ void MyGLWidget::initializeGL() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
     struct Vertex {
-        QVector2D position;
+        /*QVector2D position;
         QVector3D color;
-        QVector2D texture;
+        QVector2D texture;*/
+        float position[3];
+        float normals[3];
+        float texCoord[2];
     };
 
     Vertex vert[4] = {
@@ -129,6 +132,17 @@ void MyGLWidget::initializeGL() {
         {{1,  0.5}, {0.0f, 0.0f, 1.0f}, {0.25, 0.25}}
     };
 
+    loader.loadObjectFromFile(":/objects/gimbal.obj");
+    Q_ASSERT(loader.hasScene());
+
+    GLfloat vbodata[loader.lengthOfVBO()];
+    objectData = vbodata;
+    loader.genVBO(objectData);
+
+    GLuint ibodata[loader.lengthOfIndexArray()];
+    iboObjectData = ibodata;
+    loader.genIndexArray(iboObjectData);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -137,25 +151,35 @@ void MyGLWidget::initializeGL() {
     glGenVertexArrays(1, &m_vao); //m_vao um elemente in m_vbo richtig zu unterteilen
     glBindVertexArray(m_vao);
 
-    glGenBuffers(1, &m_vbo);
+    /*glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vert), vert, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vert), vert, GL_STATIC_DRAW);*/
+    glGenBuffers(1, &m_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER,m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vbodata), vbodata, GL_STATIC_DRAW);
 
-    GLuint data[] = { 0, 1, 2, 0, 2, 3}; // which vert to share
+    /*GLuint data[] = { 0, 1, 2, 0, 2, 3}; // which vert to share
     glGenBuffers(1, &m_ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);*/
+    glGenBuffers(1, &m_ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ibodata), ibodata, GL_STATIC_DRAW);
 
     #define OFS(s,a) reinterpret_cast<void* const>(offsetof(s,a))
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, normals));
 
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, texture));
+    //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, texture));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, texCoord));
+
+    glEnable(GL_CULL_FACE);
 
     #undef OFS
 
@@ -208,14 +232,15 @@ void MyGLWidget::paintGL() {
 
     // mp_program->setUniformValue(0, uAlpha);
 
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, loader.lengthOfIndexArray(), GL_UNSIGNED_INT, nullptr);
 
     // rotation axis (= Y-axis)
     QVector3D rotAxis(0, 1, 0);
     QMatrix4x4 rotMat;
     // rotate by 45 degree
     rotMat.rotate(45, rotAxis);
-    mp_program->setUniform(0, rotMat);
+    mp_programC->setUniform(0, rotMat);
 
     mp_programC->release();
     // glDrawArrays(GL_TRIANGLES, 0, 3);
