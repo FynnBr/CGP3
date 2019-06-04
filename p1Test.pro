@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
+    model.cpp \
     mySkybox.cpp \
     myglwidget.cpp \
 
 HEADERS += \
         mainwindow.h \
+    model.h \
     mySkybox.h \
     myglwidget.h \
     modelloader.h \

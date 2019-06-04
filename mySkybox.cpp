@@ -127,17 +127,17 @@ void MySkybox::render(const QMatrix4x4 &projection, QMatrix4x4 view) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubeTex);
 
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
     mp_program->bind();
-    mp_program->setUniformValue(mp_program->uniformLocation("uProjection"), projection);
-    mp_program->setUniformValue(mp_program->uniformLocation("uView"), view);
-    mp_program->setUniformValue(mp_program->uniformLocation("uSkybox"),0);
+    mp_program->setUniformValue(0, projection);
+    mp_program->setUniformValue(1, view);
+    mp_program->setUniformValue(8,0);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
     mp_program->release();
     glDepthMask(GL_TRUE);
 
-    glDisable(GL_CULL_FACE);
+    // glDisable(GL_CULL_FACE);
 }

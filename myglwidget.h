@@ -11,45 +11,63 @@
 #include "modelloader.h"
 #include <QElapsedTimer>
 #include "mySkybox.h"
+#include <QtMath>
+#include "model.h"
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
     Q_OBJECT
     private:
-        int m_FOV;
-        int m_Angle;
+        int m_FOV = 45;
+        int m_Angle = 0;
         bool m_ProjectionMode;
-        double m_Near;
-        double m_Far;
+        double m_Near = 2.0;
+        double m_Far = 0.0;
         int m_RotationA;
         int m_RotationB;
         int m_RotationC;
-        QVector3D m_CameraPos;
+
         GLfloat uAlpha;
         float TextureMod;
         GLuint m_tex;
-        QImage img;
-        GLuint m_ibo;
+
+        Model gimbal, sphere;
+
+        QMatrix4x4 projecMat;
+        QVector3D axisA, axisB, axisC;
+
         QMatrix4x4 uRotMatOuter;
         QMatrix4x4 uRotMatMiddle;
         QMatrix4x4 uRotMatInner;
+
         QMatrix4x4 cameraMat;
+        QVector3D m_CameraPos;
+        bool m_GimbalCam;
+
         ModelLoader loader;
         QElapsedTimer timer;
         bool animationActive;
-        bool m_GimbalCam;
-        QVector3D axisA, axisB, axisC;
-        QMatrix4x4 projecMat;
+
         MySkybox skybox;
 
+        double m_Aspect;
+
+        QMatrix4x4 ballA;
+        GLuint m_tex_ball;
+        GLuint m_vbo_ball;
+        GLuint m_vao_ball;
+        GLuint m_ibo_ball;
+        int counter;
 
         QOpenGLShaderProgram* mp_program;
         QOpenGLShaderProgram* mp_programC;
         GLuint m_vbo;
         GLuint m_vao;
+        GLuint m_ibo;
 
 
     public:
         MyGLWidget(QWidget *parent);
+        ~MyGLWidget();
         void keyPressEvent(QKeyEvent *event);
         int getAngle();
         int getFOV();
@@ -65,8 +83,9 @@ class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_4_Core{
         void setRotationC(int value);
         void moveTexture(int value);
         void setAnimation(bool value);
-        void setGimbalCamera(bool value);
+        void setGimbalCamera(bool gimbalCam);
         void updateProjMat();
+        void updateCamera();
 
     signals:
         void farValueChanged(int value);
